@@ -21,7 +21,12 @@
                         :rounded="isRounded"
                         :has-navigation="hasNavigation"
                         :mobile-mode="mobileMode">
-                        <b-step-item step="1" label="Organization Info" :clickable="isStepsClickable">
+                        <b-step-item step="1" label="Database" :clickable="isStepsClickable" :type="{'is-success': isProfileSuccess}">
+                            <h2 class="title has-text-centered">Database</h2>
+                            Lorem ipsum dolor sit amet.
+                        </b-step-item>
+
+                        <b-step-item step="2" label="Organization Info" :clickable="isStepsClickable">
                             <div class="columns is-centered">
                                 <div class="column is-4 ">
                                     <h3 class="subtitle">Organization Details</h3>
@@ -82,13 +87,13 @@
                             </div>
                         </b-step-item>
 
-                        <b-step-item step="2" label="Account" :clickable="isStepsClickable" :type="{'is-success': isProfileSuccess}">
-                            <h2 class="title has-text-centered">Account</h2>
+                        <b-step-item step="3" label="Account" :clickable="isStepsClickable" :type="{'is-success': isProfileSuccess}">
+                            <h2 class="title has-text-centered">Admin Account</h2>
                             Lorem ipsum dolor sit amet.
                         </b-step-item>
 
-                        <b-step-item step="3" label="Finish" :clickable="isStepsClickable" disabled>
-                            <h2 class="title has-text-centered">Finish</h2>
+                        <b-step-item step="4" label="Email" :clickable="isStepsClickable" disabled>
+                            <h2 class="title has-text-centered">Eamil Setup</h2>
                             Lorem ipsum dolor sit amet.
                         </b-step-item>
                     </b-steps>
@@ -110,6 +115,7 @@
             el: '#app',
             
             data:{
+                dbstatus:@json($dbstatus),
                 activeStep: 0,
 
                 isAnimated: true,
@@ -124,9 +130,17 @@
 
                 organization:{'orgname':'','email':'','phonenumber':'','file':{},'address':''}
             },
+            created(){
+                let status;
+                if(this.dbstatus.status_code == 1){ status = true; this.activeStep = 1; } else { status = false; }
+                this.updateStepperStatus('db',status);
+            },
             methods: {
                 clickMe() {
                     this.$buefy.notification.open('Clicked!!')
+                },
+                updateStepperStatus(stepname,status){
+                    console.log('update status');
                 },
                 clearIconClick(dataName){
                     app.organization[dataName] = '';

@@ -14,9 +14,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $setup = env('SETUP');
+        //echo $setup;
+        if($setup == 'true'){
+           // echo "setup mode";
+            return redirect('setup');
+        } else {
+            // return route('login');
+            return view('welcome');
+        }
+   
 });
 
-Route::get('setup', function () {
-    return view('setup');
-});
+Route::middleware('issetup')->get('setup', 'App\Http\Controllers\SetupController@setup');
