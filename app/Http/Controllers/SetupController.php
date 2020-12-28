@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\UserController;
 use DB;
 use Schema;
 use Artisan;
@@ -10,46 +12,114 @@ use Artisan;
 class SetupController extends Controller
 {
     private $migrateCount=0;
+    private $activeStep=0;
+    private $steps=['step1'=>0,'step2'=>0,'step3'=>0];
+
+    protected $OrganizationController;
+    protected $UserController;
+
+    public function __construct(OrganizationController $OrganizationController,UserController $UserController)
+    {
+        $this->OrganizationController = $OrganizationController;
+        $this->UserController = $UserController;
+    }
 
     public function setup(){
         //1. check db connection
         //2. check migration completed
+        $data = $this->checkStatus(0);
+        return view('setup', ['dbstatus' => $data]);
+    }
+    public function checkStatus($isApiCall = 1){
         if($this->checkDbConnection()){
             $this->migrateCount = 0;
+            $this->activeStep++;
+            $this->steps['step1'] = 1; 
             if($this->checkMigrationCompleted()){
-                $data = ['status_code'=>1,'message'=>'successfully connected'];
+                $data = ['status_code'=>1,'activeStep'=>$this->activeStep,'steps'=>$this->steps,'message'=>'successfully migrated'];
             } else {
-                $data=['status_code'=>0,'message'=>'migration not completed'];
+                $data=['status_code'=>0,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'migration not completed'];
             }
         } else {
-            $data=['status_code'=>0,'message'=>'unnable connected'];
+            $data=['status_code'=>0,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'Unable Connect the Database'];
         }
-        return view('setup', ['dbstatus' => $data]);
+
+        // Check whether organization is created or not.
+        $isOrganizationCreated = $this->OrganizationController->checkOrganizationStatus();
+        if($isOrganizationCreated){
+            $this->activeStep++;
+            $this->steps['step2'] = 1;
+            $data = ['status_code'=>1,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'Organization created successfully'];
+        } else {
+            $data = ['status_code'=>0,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'Organization is not created'];
+        }
+
+        //Check the Admin account is created
+        $isSuperAdminCreated = $this->UserController->checkAdminAccountStatus();
+        if($isSuperAdminCreated){
+            $this->steps['step2'] = 1;
+            $this->activeStep++;
+            $data = ['status_code'=>1,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'SuperAdmin created successfully'];
+        } else {
+            $data = ['status_code'=>0,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'SuperAdmin is not created'];
+        }
+
+
+        // response 
+        if($isApiCall == 1){
+            return response()->json($data);
+        } else {
+            return $data;
+        }
+        
     }
 
     public function checkDbConnection(){
-        if(DB::connection()->getDatabaseName())
-        {
-            //echo "conncted sucessfully to database ".DB::connection()->getDatabaseName();
-            return true;
+        try{
+            $hasDb = DB::connection()->getPdo();
+            
+            if($hasDb)
+            {
+                //echo "conncted sucessfully to database ".DB::connection()->getDatabaseName();
+                return true;
+            }
+        } catch(\Exception $ex){ 
+            $errorMessage = $ex->getMessage(); 
+            $errorCode = $ex->getCode();
+            // Note any method of class PDOException can be called on $ex.
+            return false;
         }
+        
         return false;
     }
 
     public function checkMigrationCompleted(){
-        $hastable = Schema::hasTable('migrations');
-        if($hastable){
-            $hasExists = DB::table('migrations')->where('migration', '2020_12_24_043312_create_transactions_table')->exists();
-            if($hasExists){
-                return true;
+        try{
+            $hastable = Schema::hasTable('migrations');
+            if($hastable){
+                try{
+                    $hasExists = DB::table('migrations')->where('migration', '2020_12_24_043312_create_transactions_table')->exists();
+                } catch(\Illuminate\Database\QueryException $ex){ 
+                    $errorMessage = $ex->getMessage(); 
+                    // Note any method of class PDOException can be called on $ex.
+                    return false;
+                }
+                if($hasExists){
+                    return true;
+                } else {
+                    $this->makeMigration();
+                    return true;
+                }
             } else {
                 $this->makeMigration();
                 return true;
             }
-        } else {
-            $this->makeMigration();
-            return true;
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $errorMessage = $ex->getMessage(); 
+            // Note any method of class PDOException can be called on $ex.
+            return false;
         }
+        
         return false;
     }
     public function makeMigration(){
@@ -59,6 +129,12 @@ class SetupController extends Controller
             $this->migrateCount++;
         }
     }
+
+    public function saveDbSetting(Request $request){
+        $name = $request->input('database');
+        print_r($name);
+    }
+
     /**
      * Display a listing of the resource.
      *

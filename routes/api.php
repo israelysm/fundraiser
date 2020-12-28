@@ -21,3 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('issetup')->get('/set', function () {
     echo "hi";
 });
+
+Route::middleware('issetup')->get('/saveDb', 'App\Http\Controllers\SetupController@saveDbSetting');
