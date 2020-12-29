@@ -23,3 +23,9 @@ Route::middleware('issetup')->get('/set', function () {
 });
 
 Route::middleware('issetup')->post('/saveDb', 'App\Http\Controllers\SetupController@saveDbSetting');
+
+Route::middleware('issetup')->post('/saveOrg', 'App\Http\Controllers\OrganizationController@store');
+
+Route::middleware('issetup')->get('/checkstatus', 'App\Http\Controllers\SetupController@checkStatus');
+
+Route::post('/imageupload', 'App\Http\Controllers\ImageUploadController@store');

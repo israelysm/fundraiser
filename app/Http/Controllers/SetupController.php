@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use DB;
@@ -29,8 +30,11 @@ class SetupController extends Controller
         //2. check migration completed
         $apiUrl = env('API_URL');
         $data = $this->checkStatus(0);
+        
+        //symlink($targetFolder,$linkFolder);
         return view('setup', ['dbstatus' => $data,'apiUrl'=>$apiUrl]);
     }
+    
     public function checkStatus($isApiCall = 1){
         if($this->checkDbConnection()){
             $this->migrateCount = 0;
@@ -146,6 +150,7 @@ class SetupController extends Controller
         $this->setEnvironmentValue('DB_USERNAME', $username);
         $this->setEnvironmentValue('DB_PASSWORD', $password);
         //print_r($dbconnection);
+
     }
 
     public function setEnvironmentValue($envKey, $envValue)

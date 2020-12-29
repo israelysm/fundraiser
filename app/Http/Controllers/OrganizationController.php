@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Common;
 use DB;
 
 class OrganizationController extends Controller
@@ -48,7 +49,36 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'phonenumber' => 'required',
+            'logo' => 'required',
+            'address' => 'required',
+        ]);
+        $common = new Common;
+        $common->name = 'organization_name';
+        $common->value = $request->input('name');
+        $common->save();
+        $common1 = new Common;
+        $common1->name = 'email';
+        $common1->value = $request->input('email');
+        $common1->save();
+        $common2 = new Common;
+        $common2->name = 'phonenumber';
+        $common2->value = $request->input('phonenumber');
+        $common2->save();
+        $common3 = new Common;
+        $common3->name = 'logo';
+        $common3->value = $request->input('logo');
+        $common3->save();
+        $common4 = new Common;
+        $common4->name = 'address';
+        $common4->value = $request->input('address');
+        $common4->save();
+
+        return true;
+
     }
 
     /**

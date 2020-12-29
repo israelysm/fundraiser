@@ -14,6 +14,7 @@
     <div id="app">
         <!-- Buefy components goes here -->
         <div class="container">
+            <b-loading :is-full-page="isFullPage" v-model="isLoading" :can-cancel="true"></b-loading>
             <template>
                 <section class="m-4">
                 <h1 class="is-size-1 m-4 has-text-centered">Setup</h1>
@@ -90,7 +91,7 @@
                                     <h3 class="subtitle">Organization Details</h3>
                                     <b-field label="Organization Name">
                                         <b-input placeholder="Organization Name"
-                                            v-model="organization.orgname"
+                                            v-model="organization.name"
                                             type="text"
                                             required
                                             icon="store">
@@ -113,8 +114,6 @@
                                         <b-input placeholder="Phone Number"
                                             v-model="organization.phonenumber"
                                             type="number"
-                                            min="7"
-                                            max="18"
                                             required
                                             icon="phone"
                                             icon-right="close-circle"
@@ -123,10 +122,10 @@
                                         </b-input>
                                     </b-field>
                                     <b-field label="Logo">
-                                        <b-upload v-model="organization.file" expanded>
+                                        <b-upload change="imageUpload()" v-model="file" expanded>
                                             <a class="button is-primary is-fullwidth">
                                             <b-icon icon="upload"></b-icon>
-                                            <span>@{{ organization.file.name || "Click to upload"}}</span>
+                                            <span>@{{ file.name || "Click to upload"}}</span>
                                             </a>
                                         </b-upload>
                                     </b-field>
@@ -139,7 +138,7 @@
                                         </b-input>
                                     </b-field>
                                     <div class=" has-text-centered">
-                                        <b-button type="is-primary ">Submit</b-button>
+                                        <b-button @click="submitOrgInfo" type="is-primary ">Submit</b-button>
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +150,7 @@
                         </b-step-item>
 
                         <b-step-item step="4" label="Email" :clickable="isStepsClickable" disabled>
-                            <h2 class="title has-text-centered">Eamil Setup</h2>
+                            <h2 class="title has-text-centered">Finished</h2>
                             Lorem ipsum dolor sit amet.
                         </b-step-item>
                     </b-steps>
@@ -176,6 +175,9 @@
                 apiUrl:'',
                 dbstatus:@json($dbstatus),
                 activeStep: 0,
+                isLoading: false,
+                isFullPage: true,
+                file:{},
 
                 isAnimated: true,
                 isRounded: false,
@@ -187,8 +189,13 @@
 
                 mobileMode: 'compact',
 
-                organization:{'orgname':'','email':'','phonenumber':'','file':{},'address':''},
+                organization:{'name':'','email':'','phonenumber':'','logo':'','address':''},
                 database:{'dbconnection':'','host':'','port':'','dbname':'','username':'','password':''}
+            },
+            watch: {
+                file: function (val) {
+                    this.imageUpload();
+                }
             },
             created(){
                 let status;
@@ -210,8 +217,13 @@
                 submitDb(){
                     url='/saveDb';
                     data = this.database;
+                    this.openLoading();
                     res = this.postRequest(url,data);
                     console.log(res);
+                },
+                updatestatus(data){
+                    this.dbstatus=data;
+                    this.activeStep = data.activeStep;
                 },
                 postRequest(url, data){
                     const headers = { 
@@ -220,7 +232,48 @@
                     url = this.apiUrl+url;
                     console.log(url);
                     axios.post(url, data, { headers })
-                        .then((response) =>{ return response; } );
+                        .then(response =>{ this.checkStatus('/checkstatus'); } );
+                },
+                checkStatus(url){
+                    
+                    url = this.apiUrl+url;
+                    console.log(url);
+                    axios.get(url)
+                        .then(response =>{ this.updatestatus(response.data);  this.isLoading = false; console.log(response) } );
+                },
+                openLoading() {
+                    this.isLoading = true
+                    setTimeout(() => {
+                        this.isLoading = false
+                    }, 10 * 1000)
+                },
+                imageUpload(){
+                    //$image = file.name;
+                    url = '/imageupload';
+                    url = this.apiUrl+url;
+                    console.log(this.file);
+                    const headers = { headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }};
+                    let formData = new FormData();
+                    formData.append('file', this.file);
+                    axios.post( url,
+                        formData,headers
+                        ).then(response => {
+                            console.log(response);
+                            this.organization.logo = response.data.path;
+                            console.log('SUCCESS!!');
+                        })
+                        .catch(function(){
+                            console.log('FAILURE!!');
+                    });
+                },
+                submitOrgInfo(){
+                    url='/saveOrg';
+                    data = this.organization;
+                    this.openLoading();
+                    res = this.postRequest(url,data);
+                    console.log(res);
                 }
             }
         })
