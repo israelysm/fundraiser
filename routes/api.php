@@ -22,4 +22,4 @@ Route::middleware('issetup')->get('/set', function () {
     echo "hi";
 });
 
-Route::middleware('issetup')->get('/saveDb', 'App\Http\Controllers\SetupController@saveDbSetting');
+Route::middleware('issetup')->post('/saveDb', 'App\Http\Controllers\SetupController@saveDbSetting');

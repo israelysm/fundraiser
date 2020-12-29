@@ -7,6 +7,7 @@
     <title>Fundraiser Setup</title>
     <link rel="stylesheet" href="./buefy/buefy.min.css">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -77,7 +78,7 @@
                                         </b-input>
                                     </b-field>
                                     <div class=" has-text-centered">
-                                        <b-button type="is-primary ">Submit</b-button>
+                                        <b-button @click="submitDb" type="is-primary ">Submit</b-button>
                                     </div>
                                 </div>
                             </div>
@@ -172,6 +173,7 @@
             el: '#app',
             
             data:{
+                apiUrl:'',
                 dbstatus:@json($dbstatus),
                 activeStep: 0,
 
@@ -190,13 +192,14 @@
             },
             created(){
                 let status;
+                this.apiUrl = <?php echo "'".$apiUrl."'" ?>;
                 //if(this.dbstatus.status_code == 1){ status = true; this.activeStep = 1; } else { status = false; }
                 this.activeStep= this.dbstatus.activeStep;
                 this.updateStepperStatus('db',status);
             },
             methods: {
                 clickMe() {
-                    this.$buefy.notification.open('Clicked!!')
+                    this.$buefy.notification.open('Clicked!!');
                 },
                 updateStepperStatus(stepname,status){
                     console.log('update status');
@@ -204,12 +207,20 @@
                 clearIconClick(dataName){
                     app.organization[dataName] = '';
                 },
+                submitDb(){
+                    url='/saveDb';
+                    data = this.database;
+                    res = this.postRequest(url,data);
+                    console.log(res);
+                },
                 postRequest(url, data){
                     const headers = { 
                         "Content-Type": "application/json"
                     };
-                    axios.post("https://reqres.in/api/articles", article, { headers })
-                        .then(response =>{ return response } );
+                    url = this.apiUrl+url;
+                    console.log(url);
+                    axios.post(url, data, { headers })
+                        .then((response) =>{ return response; } );
                 }
             }
         })

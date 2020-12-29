@@ -27,8 +27,9 @@ class SetupController extends Controller
     public function setup(){
         //1. check db connection
         //2. check migration completed
+        $apiUrl = env('API_URL');
         $data = $this->checkStatus(0);
-        return view('setup', ['dbstatus' => $data]);
+        return view('setup', ['dbstatus' => $data,'apiUrl'=>$apiUrl]);
     }
     public function checkStatus($isApiCall = 1){
         if($this->checkDbConnection()){
@@ -131,8 +132,42 @@ class SetupController extends Controller
     }
 
     public function saveDbSetting(Request $request){
-        $name = $request->input('database');
-        print_r($name);
+        $dbconnection = $request->input('dbconnection');
+        $dbname = $request->input('dbname');
+        $host = $request->input('host');
+        $port = $request->input('port');
+        $username = $request->input('username');
+        $password = $request->input('password');
+       // putenv("DB_CONNECTION=mysql");
+        $this->setEnvironmentValue('DB_CONNECTION', $dbconnection);
+        $this->setEnvironmentValue('DB_HOST', $host);
+        $this->setEnvironmentValue('DB_PORT', $port);
+        $this->setEnvironmentValue('DB_DATABASE', $dbname);
+        $this->setEnvironmentValue('DB_USERNAME', $username);
+        $this->setEnvironmentValue('DB_PASSWORD', $password);
+        //print_r($dbconnection);
+    }
+
+    public function setEnvironmentValue($envKey, $envValue)
+    {
+        $envFile = app()->environmentFilePath();
+        $str = file_get_contents($envFile);
+
+        //$oldValue = strtok($str, "{$envKey}=");
+        $oldValue = env($envKey);
+        
+        if(empty($oldValue)){
+            //echo "empty old value";
+            $str = str_replace("{$envKey}=", "{$envKey}={$envValue}", $str);
+        } else {
+            //echo "non empty old value";
+            $str = str_replace("{$envKey}={$oldValue}", "{$envKey}={$envValue}", $str);
+        }
+        
+
+        $fp = fopen($envFile, 'w');
+        $res = fwrite($fp, $str);
+        fclose($fp);
     }
 
     /**
