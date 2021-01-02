@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use DB;
 use Schema;
 use Artisan;
@@ -60,9 +61,9 @@ class SetupController extends Controller
         }
 
         //Check the Admin account is created
-        $isSuperAdminCreated = $this->UserController->checkAdminAccountStatus();
+        $isSuperAdminCreated = $this->checkAdminAccountStatus();
         if($isSuperAdminCreated){
-            $this->steps['step2'] = 1;
+            $this->steps['step3'] = 1;
             $this->activeStep++;
             $data = ['status_code'=>1,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'SuperAdmin created successfully'];
         } else {
@@ -151,6 +152,16 @@ class SetupController extends Controller
         $this->setEnvironmentValue('DB_PASSWORD', $password);
         //print_r($dbconnection);
 
+    }
+
+    public function checkAdminAccountStatus(){
+        //$hasSuperAdmin = User::where('role', 'superadmin')->exists();
+        $hasSuperAdmin = DB::table('users')->where('role', 'superadmin')->exists();
+        if($hasSuperAdmin){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function setEnvironmentValue($envKey, $envValue)

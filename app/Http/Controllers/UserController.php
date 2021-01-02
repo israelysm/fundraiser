@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends Controller
 {
@@ -48,7 +51,34 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'username' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|min:8'
+        ]);
+
+        $request['role'] = 'user';
+        $request['status'] = 1; 
+
+        $user = User::updateOrCreate($request);
+    }
+
+    public function storeAdmin(Request $request)
+    {
+        $validated = $request->validate([
+            'username' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|min:8'
+        ]);
+
+        $requestData= $request->all();
+
+        $requestData['password'] = Hash::make( $requestData['password']);
+
+        $requestData['role'] = 'superadmin';
+        $requestData['status'] = 1; 
+
+        $user = User::updateOrCreate($requestData);
     }
 
     /**

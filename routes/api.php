@@ -26,6 +26,8 @@ Route::middleware('issetup')->post('/saveDb', 'App\Http\Controllers\SetupControl
 
 Route::middleware('issetup')->post('/saveOrg', 'App\Http\Controllers\OrganizationController@store');
 
+Route::middleware('issetup')->post('/adminAccount', 'App\Http\Controllers\UserController@storeAdmin');
+
 Route::middleware('issetup')->get('/checkstatus', 'App\Http\Controllers\SetupController@checkStatus');
 
 Route::post('/imageupload', 'App\Http\Controllers\ImageUploadController@store');

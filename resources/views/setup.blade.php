@@ -37,7 +37,7 @@
                                             v-model="database.dbconnection"
                                             type="text"
                                             required
-                                            icon="store">
+                                            icon="link-variant">
                                         </b-input>
                                     </b-field>
                                     <b-field label="Host Address">
@@ -45,7 +45,7 @@
                                             v-model="database.host"
                                             type="text"
                                             required
-                                            icon="store">
+                                            icon="web">
                                         </b-input>
                                     </b-field>
                                     <b-field label="Port Number">
@@ -53,7 +53,7 @@
                                             v-model="database.port"
                                             type="text"
                                             required
-                                            icon="store">
+                                            icon="passport">
                                         </b-input>
                                     </b-field>
                                     <b-field label="Database Name">
@@ -61,7 +61,7 @@
                                             v-model="database.dbname"
                                             type="text"
                                             required
-                                            icon="store">
+                                            icon="database">
                                         </b-input>
                                     </b-field>
                                     <b-field label="Username">
@@ -69,12 +69,14 @@
                                             v-model="database.username"
                                             type="text"
                                             required
-                                            icon="store">
+                                            icon="account">
                                         </b-input>
                                     </b-field>
                                     <b-field label="Password">
                                         <b-input type="password"
+                                            placeholder="Password"
                                             v-model="database.password"
+                                            icon="form-textbox-password"
                                             password-reveal>
                                         </b-input>
                                     </b-field>
@@ -87,7 +89,11 @@
 
                         <b-step-item step="2" label="Organization Info" :clickable="isStepsClickable">
                             <div class="columns is-centered">
-                                <div class="column is-4 ">
+                                <div v-show="dbstatus.steps.step2 ? true:false" class="column is-4">
+                                    <img src="images/animation_done.gif">
+                                    <p class="subtitle has-text-centered">Done</p>
+                                </div>
+                                <div v-show="dbstatus.steps.step2 ? false:true" class="column is-4 ">
                                     <h3 class="subtitle">Organization Details</h3>
                                     <b-field label="Organization Name">
                                         <b-input placeholder="Organization Name"
@@ -145,13 +151,64 @@
                         </b-step-item>
 
                         <b-step-item step="3" label="Account" :clickable="isStepsClickable" :type="{'is-success': isProfileSuccess}">
-                            <h2 class="title has-text-centered">Admin Account</h2>
-                            Lorem ipsum dolor sit amet.
+                            <div class="columns is-centered">
+                                <div v-show="dbstatus.steps.step3 ? true:false" class="column is-4">
+                                    <img src="images/animation_done.gif">
+                                    <p class="subtitle has-text-centered">Done</p>
+                                </div>
+                                <div v-show="dbstatus.steps.step3 ? false:true" class="column is-4 ">
+                                    <h3 class="subtitle">Admin Account</h3>
+                                    <b-field label="Username">
+                                        <b-input placeholder="Username"
+                                            v-model="adminaccount.username"
+                                            type="text"
+                                            required
+                                            icon="account">
+                                        </b-input>
+                                    </b-field>
+
+                                    <b-field label="Email">
+                                        <b-input placeholder="Email"
+                                            v-model="adminaccount.email"
+                                            type="email"
+                                            required
+                                            icon="email"
+                                            icon-right="close-circle"
+                                            icon-right-clickable
+                                            @icon-right-click="clearIconClick('email')">
+                                        </b-input>
+                                    </b-field>
+                                    <b-field label="Password">
+                                        <b-input type="password"
+                                            placeholder="Password"
+                                            v-model="adminaccount.password"
+                                            required
+                                            icon="form-textbox-password"
+                                            password-reveal>
+                                        </b-input>
+                                    </b-field>
+                                    <div class=" has-text-centered">
+                                        <b-button @click="submitAdminAccount" type="is-primary ">Submit</b-button>
+                                    </div>
+                                </div>
+                            </div>
                         </b-step-item>
 
-                        <b-step-item step="4" label="Email" :clickable="isStepsClickable" disabled>
+                        <b-step-item step="4" label="Finished" :clickable="isStepsClickable" disabled>
                             <h2 class="title has-text-centered">Finished</h2>
-                            Lorem ipsum dolor sit amet.
+                            <div class="columns is-centered">
+                                <div v-show="dbstatus.steps.step3 ? true:false" class="column is-4">
+                                    <img src="images/animation_done.gif">
+                                    <p class="has-text-centered">That's all setup completed. Amazing things waiting for you</p>
+                                    <div class=" has-text-centered mt-2">
+                                        <a href="admin"><b-button type="is-primary ">Open My Portal</b-button></a>
+                                    </div>
+                                </div>
+                                <div class="columns is-centered">
+                                <div v-show="dbstatus.steps.step3 ? false:true" class="column is-4">
+                                    <p class="subtitle has-text-centered">You Should Complete Previous Steps</p>
+                                </div>
+                            </div>
                         </b-step-item>
                     </b-steps>
                 </section>
@@ -190,7 +247,8 @@
                 mobileMode: 'compact',
 
                 organization:{'name':'','email':'','phonenumber':'','logo':'','address':''},
-                database:{'dbconnection':'','host':'','port':'','dbname':'','username':'','password':''}
+                database:{'dbconnection':'','host':'','port':'','dbname':'','username':'','password':''},
+                adminaccount:{'username':'','email':'','password':''}
             },
             watch: {
                 file: function (val) {
@@ -271,6 +329,14 @@
                 submitOrgInfo(){
                     url='/saveOrg';
                     data = this.organization;
+                    this.openLoading();
+                    res = this.postRequest(url,data);
+                    console.log(res);
+                },
+                submitAdminAccount(){
+                    console.log('submit admin account');
+                    url='/adminAccount';
+                    data = this.adminaccount;
                     this.openLoading();
                     res = this.postRequest(url,data);
                     console.log(res);
