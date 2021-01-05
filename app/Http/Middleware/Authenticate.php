@@ -4,6 +4,9 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
+use Closure;
+use Illuminate\Http\Request;
+
 class Authenticate extends Middleware
 {
     /**
@@ -12,6 +15,14 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
+    public function handle(Request $request, Closure $next)
+    {
+        if($request->session()->get('isAdmin')){
+            return $next($request);
+        }
+        return redirect('login');
+    }
+
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
