@@ -37,3 +37,9 @@ Route::post('login', 'App\Http\Controllers\AuthController@login');
 Route::get('logout', 'App\Http\Controllers\AuthController@logout');
 
 Route::middleware('auth')->get('dashboard', 'App\Http\Controllers\DashboardController@index');
+
+Route::middleware('auth')->get('campaign', 'App\Http\Controllers\CampaignController@index');
+
+Route::middleware('auth')->get('events', 'App\Http\Controllers\EventController@index');
+
+Route::middleware('auth')->get('members', 'App\Http\Controllers\MembersController@index');
