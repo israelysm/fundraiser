@@ -195,20 +195,21 @@
                         </b-step-item>
 
                         <b-step-item step="4" label="Finished" :clickable="isStepsClickable" disabled>
-                            <h2 class="title has-text-centered">Finished</h2>
                             <div class="columns is-centered">
-                                <div v-show="dbstatus.steps.step3 ? true:false" class="column is-4">
-                                    <img src="images/animation_done.gif">
-                                    <p class="has-text-centered">That's all setup completed. Amazing things waiting for you</p>
-                                    <div class=" has-text-centered mt-2">
-                                        <a href="admin"><b-button type="is-primary ">Open My Portal</b-button></a>
-                                    </div>
+                                <p class="has-text-centered">That's all setup completed. Amazing things waiting for you</p>
+                            </div>
+                            <div class="columns is-centered">
+                                <div class="has-text-centered mt-2">
+                                    <a href="admin"><b-button type="is-primary ">Open My Portal</b-button></a>
                                 </div>
-                                <div class="columns is-centered">
                                 <div v-show="dbstatus.steps.step3 ? false:true" class="column is-4">
                                     <p class="subtitle has-text-centered">You Should Complete Previous Steps</p>
                                 </div>
                             </div>
+                            <div class="columns is-centered">
+                                <div v-show="dbstatus.steps.step3 ? true:false" class="column is-4">
+                                    <img src="images/animation_done.gif">
+                                </div>
                         </b-step-item>
                     </b-steps>
                 </section>
