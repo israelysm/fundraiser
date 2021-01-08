@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Campaign;
 
 class CampaignController extends Controller
 {
@@ -13,7 +14,9 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        return view('campaign.campaign');
+        $apiUrl = env('API_URL');
+        $campaigns = Campaign::where('status',1)->get()->toArray();
+        return view('campaign.campaign', ['campaignlist'=>$campaigns,'apiUrl'=>$apiUrl]);
     }
 
     /**
@@ -34,7 +37,21 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required',
+            'slug' => 'required|unique:campaigns',
+            'feature_image' => 'required',
+            'target_amount' => 'required',
+            'story' => 'required',
+        ]);
+        $requestData= $request->all();
+        $requestData['status'] = 1;
+        if(!empty($requestData['id'])){
+            $res =Campaign::where('id', $requestData['id'])->update($requestData);
+        } else {
+            $res = Campaign::Create($requestData);
+        }
+        
     }
 
     /**
@@ -79,6 +96,7 @@ class CampaignController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $res = Campaign::destroy($id);
+        return redirect()->back();
     }
 }

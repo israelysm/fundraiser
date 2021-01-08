@@ -1,21 +1,69 @@
 @section('script-data')
-data: [
-                    { 'id': 1, 'first_name': 'Jesse', 'last_name': 'Simmons', 'date': '2016/10/15 13:43:27', 'gender': 'Male' },
-                    { 'id': 2, 'first_name': 'John', 'last_name': 'Jacobs', 'date': '2016/12/15 06:00:53', 'gender': 'Male' },
-                    { 'id': 3, 'first_name': 'Tina', 'last_name': 'Gilbert', 'date': '2016/04/26 06:26:28', 'gender': 'Female' },
-                    { 'id': 4, 'first_name': 'Clarence', 'last_name': 'Flores', 'date': '2016/04/10 10:28:46', 'gender': 'Male' },
-                    { 'id': 5, 'first_name': 'Anne', 'last_name': 'Lee', 'date': '2016/12/06 14:38:38', 'gender': 'Female' }
-                ],
                 isEmpty: false,
-                isBordered: false,
-                isStriped: false,
-                isNarrowed: false,
-                isHoverable: false,
-                isFocusable: false,
-                isLoading: false,
-                hasMobileCards: true,
+                isComponentModalActive: false,
+                campaignlist:'',
+                formProps: {
+                    title: '',
+                    slug: '',
+                    ending_date:'',
+                    target_amount:'',
+                    story:'',
+                    apiurl:'',
+                },
+@endsection
+
+@section('script-created-content')
+    this.apiUrl = <?php echo "'".$apiUrl."'"; ?>;
+    this.formProps.apiurl = <?php echo "'".$apiUrl."'"; ?>;
+    this.csrf = <?php echo "'".csrf_token()."'"; ?>;
+    this.campaignlist = @json($campaignlist);
 @endsection
 
 @section('script-method')
+    submit(data){
+        //console.log('Hi'+data);
+        url = 'newcampaign';
+        //url = this.apiUrl+url;
+                    
+        const headers = { headers: {
+            'Content-Type': 'application/json'
+        }};
 
+        let formData = new FormData();
+        formData.append('id', data.id);
+        formData.append('title', data.title);
+        formData.append('slug',data.slug);
+        formData.append('ending_date',data.ending_date);
+        formData.append('target_amount',data.target_amount);
+        formData.append('feature_image',data.feature_image);
+        formData.append('story',data.story);
+                    
+        axios.post( url,
+        formData,headers
+        ).then(response => {
+            console.log(response);
+            //this.campaign.feature_image = response.data;
+            console.log('SUCCESS!!');
+            this.$buefy.toast.open({
+                    message: 'Campaign Successfully Created!',
+                    type: 'is-success'
+                })
+            
+            this.isComponentModalActive=false;
+            location.reload(); 
+        })
+        .catch(function(){
+            //code 422 is Vaildation error.
+            this.$buefy.toast.open({
+                    message: 'Something happened Worngly!',
+                    type: 'is-danger'
+                })
+            console.log('FAILURE!!');
+        });
+    },
+    editcampaign(data){
+        this.formProps = this.campaignlist[data];
+        this.isComponentModalActive = true;
+
+    }
 @endsection

@@ -78,7 +78,7 @@ class UserController extends Controller
         $requestData['role'] = 'superadmin';
         $requestData['status'] = 1; 
 
-        $user = User::updateOrCreate($requestData);
+        $user = User::Create($requestData);
     }
 
     /**

@@ -31,3 +31,6 @@ Route::middleware('issetup')->post('/adminAccount', 'App\Http\Controllers\UserCo
 Route::middleware('issetup')->get('/checkstatus', 'App\Http\Controllers\SetupController@checkStatus');
 
 Route::post('/imageupload', 'App\Http\Controllers\ImageUploadController@store');
+
+
+

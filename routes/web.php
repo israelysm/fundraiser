@@ -42,4 +42,8 @@ Route::middleware('auth')->get('campaign', 'App\Http\Controllers\CampaignControl
 
 Route::middleware('auth')->get('events', 'App\Http\Controllers\EventController@index');
 
-Route::middleware('auth')->get('members', 'App\Http\Controllers\MembersController@index');
+Route::middleware('auth')->get('members', 'App\Http\Controllers\MemberController@index');
+
+Route::middleware('auth')->post('newcampaign', 'App\Http\Controllers\CampaignController@store');
+
+Route::middleware('auth')->get('campaign/{id}/delete', 'App\Http\Controllers\CampaignController@destroy');
