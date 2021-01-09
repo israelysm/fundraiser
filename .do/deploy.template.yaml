@@ -31,7 +31,7 @@ spec:
       value: ${db.DATABASE_URL}
     - key: DB_CONNECTION
       scope: RUN_TIME
-      value: mysql
+      value: pgsql
     - key: DB_HOST
       scope: RUN_TIME
       value: ${db.HOSTNAME}
@@ -80,7 +80,7 @@ spec:
         value: ${db.DATABASE_URL}
       - key: DB_CONNECTION
         scope: RUN_TIME
-        value: mysql
+        value: pgsql
       - key: DB_HOST
         scope: RUN_TIME
         value: ${db.HOSTNAME}
@@ -97,7 +97,7 @@ spec:
         scope: RUN_TIME
         value: ${db.PASSWORD}
   databases:
-    - engine: MYSQL
+    - engine: PG
       name: fundraiser
       num_nodes: 1
       production: false
