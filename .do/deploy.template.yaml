@@ -100,5 +100,5 @@ spec:
     - engine: MYSQL
       name: fundraiser
       num_nodes: 1
-      production: 1
+      production: true
       version: "12"
