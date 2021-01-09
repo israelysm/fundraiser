@@ -80,7 +80,7 @@ Enter Your Admin user Login Credentials:
 ![donation](https://nanotricks.in/fundraiser/donation.JPG)
 ![payment image](https://nanotricks.in/fundraiser/payment.JPG)
 
-## How To Integrate Your Website
+## How To Integrate With Your Website
 Suppose your existing is developed using HTML,WIX,Wordpress,Laravel,Python don’t worry we can you Integrate our component with your website Very easily.
 
 #### Step 1:
