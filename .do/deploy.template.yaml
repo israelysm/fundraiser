@@ -65,7 +65,7 @@ spec:
         value:  Fundraiser
       - key: APP_ENV
         scope: RUN_TIME
-        value: dev
+        value: production
       - key: APP_KEY
         scope: RUN_TIME
         value: base64:ffYPNP8kPeQDf8gE/qh3kWjk59p6gFY66kCKhhKUa2w=
@@ -98,7 +98,6 @@ spec:
         value: ${db.PASSWORD}
   databases:
     - engine: MYSQL
-      name: db
+      name: fundraiser
       num_nodes: 1
-      size: db-s-dev-database
       version: "12"
