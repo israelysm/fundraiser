@@ -21,8 +21,7 @@ Route::get('/', function () {
            // echo "setup mode";
             return redirect('setup');
         } else {
-            // return route('login');
-            return view('welcome');
+            return redirect('login');
         }
 });
 

@@ -64,6 +64,7 @@
     editcampaign(data){
         this.formProps = this.campaignlist[data];
         this.formProps.apiurl= this.apiUrl;
+        //Object.assign(this.formProps, {apiurl: this.apiUrl});
         this.isComponentModalActive = true;
 
     }
