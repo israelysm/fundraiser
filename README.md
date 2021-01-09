@@ -35,10 +35,6 @@ Linux:
     copy .env.example .env
 
 #### Step 4:
-Generate the key using following command
-
-    php artisan key:generate
-#### Step 5:
 Update the database configuration in .env file. then check your env file is have SETUP=true or Just add **SETUP=true**
 
     DB_CONNECTION=mysql
@@ -48,11 +44,17 @@ Update the database configuration in .env file. then check your env file is have
     DB_USERNAME=root(Your Database username)
     DB_PASSWORD=(Your Database password)
 
-#### Step 6:
+#### Step 5:
 Then open the command prompt or terminal. Then locate your fundraiser project directory. Then execute the following commands one by one.
 
     composer install
+
+#### Step 6:
+Generate the key using following command
+
+    php artisan key:generate
     php artisan migrate
+
 #### Step 7:
 Yeah you all most done. Now open your browser and access fundraiser using your domain name or localhost.
 
