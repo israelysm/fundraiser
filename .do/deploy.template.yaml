@@ -19,7 +19,7 @@ spec:
       value: production
     - key: APP_KEY
       scope: RUN_TIME
-      value: 
+      value: base64:4+yrHI+wc50v1WHos/J7Nsya2CZPxEqAyrkYXkrLcAE=
     - key: APP_DEBUG
       scope: RUN_TIME
       value: "0"
