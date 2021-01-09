@@ -80,6 +80,43 @@ Enter Your Admin user Login Credentials:
 ![donation](https://nanotricks.in/fundraiser/donation.JPG)
 ![payment image](https://nanotricks.in/fundraiser/payment.JPG)
 
+## How To Integrate Your Website
+Suppose your existing is developed using HTML,WIX,Wordpress,Laravel,Python don’t worry we can you Integrate our component with your website Very easily.
+
+#### Step 1:
+Just Copy Paste Following Code inside Your page **<head>**
+
+    <link rel="stylesheet" href="./buefy/buefy.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>
+
+#### Step 2:
+
+And again Copy and Paste the Following line before of Closing Body tag **</body>**
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- Full bundle -->
+    <script src="./buefy/buefy.min.js"></script>
+    <script src="./js/fundraiser.js"></script>
+
+#### Step 3:
+And The Final thing just the widget code to which section you want to display the Components.
+
+     <div v-if="campaignshow" class="columns is-flex-wrap-wrap">
+            <campaigncard v-for="(campaign,index) in campaignlist"
+                v-bind="campaign"
+                :index="index"
+                v-on:donate="openPaymentModal($event)"
+                :key="index">
+            </campaigncard>
+      </div>
+      <!-- campaign end -->
+      <b-modal 
+        v-model="isComponentModalActive"
+        has-modal-card
+        :can-cancel="false">
+        <pay-form v-bind="payForm"></pay-form>
+      </b-modal>
+
 
 
 ### Contributing
