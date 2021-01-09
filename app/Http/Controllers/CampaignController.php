@@ -45,17 +45,17 @@ class CampaignController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required',
-            'slug' => 'required|unique:campaigns',
+            'slug' => 'required',
             'feature_image' => 'required',
             'target_amount' => 'required',
             'story' => 'required',
         ]);
         $requestData= $request->all();
         $requestData['status'] = 1;
-        if(!empty($requestData['id'])){
-            $res =Campaign::where('id', $requestData['id'])->update($requestData);
-        } else {
+        if($requestData['id']=='undefined'){
             $res = Campaign::Create($requestData);
+        } else {
+            $res =Campaign::where('id', $requestData['id'])->update($requestData);
         }
         
     }

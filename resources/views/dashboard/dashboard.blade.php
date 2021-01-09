@@ -12,7 +12,7 @@
 
 @section('content')
 <div class="columns">
-      <section class="column is-5">
+      <!-- <section class="column is-5">
         <b-collapse class="card" animation="slide" aria-id="contentIdForA11y3">
             <div
                 slot="trigger" 
@@ -41,9 +41,10 @@
                 <a class="card-footer-item">Delete</a>
             </footer>
         </b-collapse>
-      </section>
+      </section> -->
 
       <section class="column is-5">
+      <a href="campaign">
         <div class="card" animation="slide">
         <div class="card-header">
                 <p class="card-header-title">
@@ -56,6 +57,7 @@
                 </div>
             </div>
         </div>
+        </a>
       </section>
 </div>
 @endsection

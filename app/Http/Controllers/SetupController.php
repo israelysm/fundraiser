@@ -59,17 +59,22 @@ class SetupController extends Controller
         } else {
             $data = ['status_code'=>0,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'Organization is not created'];
         }
+        
+            //Check the Admin account is created
+            $isSuperAdminCreated = $this->checkAdminAccountStatus();
+            if($isSuperAdminCreated){
+                $this->steps['step3'] = 1;
+                $this->activeStep++;
+                $data = ['status_code'=>1,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'SuperAdmin created successfully'];
+            } else {
+                $data = ['status_code'=>0,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'SuperAdmin is not created'];
+            }
+        
+        
 
-        //Check the Admin account is created
-        $isSuperAdminCreated = $this->checkAdminAccountStatus();
-        if($isSuperAdminCreated){
-            $this->steps['step3'] = 1;
-            $this->activeStep++;
-            $data = ['status_code'=>1,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'SuperAdmin created successfully'];
-        } else {
-            $data = ['status_code'=>0,'activeStep'=>$this->activeStep, 'steps'=>$this->steps,'message'=>'SuperAdmin is not created'];
+        if($this->steps['step1']==1 AND $this->steps['step2']==1 AND $this->steps['step3']==1 ){
+            $this->setEnvironmentValue('SETUP', 'false');
         }
-
 
         // response 
         if($isApiCall == 1){
@@ -156,7 +161,14 @@ class SetupController extends Controller
 
     public function checkAdminAccountStatus(){
         //$hasSuperAdmin = User::where('role', 'superadmin')->exists();
-        $hasSuperAdmin = DB::table('users')->where('role', 'superadmin')->exists();
+        try{
+            $hasSuperAdmin = DB::table('users')->where('role', 'superadmin')->exists();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $errorMessage = $ex->getMessage(); 
+            // Note any method of class PDOException can be called on $ex.
+            return false;
+        }
+        
         if($hasSuperAdmin){
             return true;
         } else {
@@ -171,6 +183,10 @@ class SetupController extends Controller
 
         //$oldValue = strtok($str, "{$envKey}=");
         $oldValue = env($envKey);
+
+        if($envKey == 'SETUP'){
+            $oldValue = 'true';
+        }
         
         if(empty($oldValue)){
             //echo "empty old value";

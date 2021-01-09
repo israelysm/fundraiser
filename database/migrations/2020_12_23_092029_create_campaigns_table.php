@@ -18,7 +18,7 @@ class CreateCampaignsTable extends Migration
             $table->string('title');
             $table->string('blog_title')->nullable();
             $table->string('slug')->unique();
-            $table->string('story');
+            $table->longText('story');
             $table->string('ending_date')->nullable();
             $table->integer('contributor_count')->default(0);
             $table->integer('share_count')->default(0);
