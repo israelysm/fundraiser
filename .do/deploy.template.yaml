@@ -1,74 +1,26 @@
-services:
-- environment_slug: php
-  run_command: heroku-php-apache2 public/
-  envs:
-  - key: APP_NAME
-    scope: RUN_TIME
-    value:  Fundraiser
-  - key: APP_ENV
-    scope: RUN_TIME
-    value: production
-  - key: APP_KEY
-    scope: RUN_TIME
-    value: 
-  - key: APP_DEBUG
-    scope: RUN_TIME
-    value: "0"
-  - key: APP_URL
-    scope: RUN_TIME
-    value: ${APP_URL}
-  - key: DATABASE_URL
-    scope: RUN_TIME
-    value: ${db.DATABASE_URL}
-  - key: DB_CONNECTION
-    scope: RUN_TIME
-    value: mysql
-  - key: DB_HOST
-    scope: RUN_TIME
-    value: ${db.HOSTNAME}
-  - key: DB_PORT
-    scope: RUN_TIME
-    value: ${db.PORT}
-  - key: DB_DATABASE
-    scope: RUN_TIME
-    value: ${db.DATABASE}
-  - key: DB_USERNAME
-    scope: RUN_TIME
-    value: ${db.USERNAME}
-  - key: DB_PASSWORD
-    scope: RUN_TIME
-    value: ${db.PASSWORD}
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: israelysm/fundraiser
-  http_port: 8080
-  instance_count: 1
-  instance_size_slug: basic-xs
-  name: Fundraiser
-  routes:
-  - path: /
-  jobs:
-  - name: migrate
-    kind: POST_DEPLOY
-    github:
-      repo: israelysm/fundraiser
-      branch: main
-      deploy_on_push: true
-    run_command: php artisan migrate
+spec:
+  name: fundraiser
+  region: ams
+  services:
+  - name: Fundraiser
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xs
+    environment_slug: php
+    run_command: heroku-php-apache2 public/
     envs:
     - key: APP_NAME
       scope: RUN_TIME
       value:  Fundraiser
     - key: APP_ENV
       scope: RUN_TIME
-      value: dev
+      value: production
     - key: APP_KEY
       scope: RUN_TIME
-      value: base64:ffYPNP8kPeQDf8gE/qh3kWjk59p6gFY66kCKhhKUa2w=
+      value: 
     - key: APP_DEBUG
       scope: RUN_TIME
-      value: "1"
+      value: "0"
     - key: APP_URL
       scope: RUN_TIME
       value: ${APP_URL}
@@ -93,11 +45,60 @@ services:
     - key: DB_PASSWORD
       scope: RUN_TIME
       value: ${db.PASSWORD}
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: israelysm/fundraiser
+  routes:
+    - path: /
+  jobs:
+    - name: migrate
+      kind: POST_DEPLOY
+      github:
+        repo: israelysm/fundraiser
+        branch: main
+        deploy_on_push: true
+      run_command: php artisan migrate
+      envs:
+      - key: APP_NAME
+        scope: RUN_TIME
+        value:  Fundraiser
+      - key: APP_ENV
+        scope: RUN_TIME
+        value: dev
+      - key: APP_KEY
+        scope: RUN_TIME
+        value: base64:ffYPNP8kPeQDf8gE/qh3kWjk59p6gFY66kCKhhKUa2w=
+      - key: APP_DEBUG
+        scope: RUN_TIME
+        value: "1"
+      - key: APP_URL
+        scope: RUN_TIME
+        value: ${APP_URL}
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${db.DATABASE_URL}
+      - key: DB_CONNECTION
+        scope: RUN_TIME
+        value: mysql
+      - key: DB_HOST
+        scope: RUN_TIME
+        value: ${db.HOSTNAME}
+      - key: DB_PORT
+        scope: RUN_TIME
+        value: ${db.PORT}
+      - key: DB_DATABASE
+        scope: RUN_TIME
+        value: ${db.DATABASE}
+      - key: DB_USERNAME
+        scope: RUN_TIME
+        value: ${db.USERNAME}
+      - key: DB_PASSWORD
+        scope: RUN_TIME
+        value: ${db.PASSWORD}
   databases:
-  - engine: MYSQL
-    name: db
-    num_nodes: 1
-    size: db-s-dev-database
-    version: "12"
-  name: fundraiser
-  region: ams
+    - engine: MYSQL
+      name: db
+      num_nodes: 1
+      size: db-s-dev-database
+      version: "12"
