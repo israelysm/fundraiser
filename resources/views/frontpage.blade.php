@@ -20,7 +20,8 @@
                 v-bind="campaign"
                 :index="index"
                 v-on:donate="openPaymentModal($event)"
-                :key="index"></campaigncard>
+                :key="index">
+            </campaigncard>
       </div>
       <!-- campaign end -->
       <b-modal 
@@ -28,7 +29,7 @@
         has-modal-card
         :can-cancel="false">
         <pay-form v-bind="payForm"></pay-form>
-    </b-modal>
+      </b-modal>
     </div>
 
     

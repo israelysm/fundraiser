@@ -12,6 +12,10 @@ There are two ways to Install Fundraiser. First one is quick setup using Digital
 ### Digital Ocean Deploy Button
 #### Step 1: 
 Just Click The one click deploy button. 
+
+[![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/israelysm/fundraiser/tree/main)
+
+
 #### Manual Setup:
 #### Step 1:
 Download And Install Following Application:
