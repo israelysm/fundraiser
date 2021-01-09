@@ -26,6 +26,9 @@ spec:
     - key: APP_URL
       scope: RUN_TIME
       value: ${APP_URL}
+    - key: API_URL
+      scope: RUN_TIME
+      value: ${APP_URL}/api
     - key: DATABASE_URL
       scope: RUN_TIME
       value: ${db.DATABASE_URL}
@@ -47,6 +50,9 @@ spec:
     - key: DB_PASSWORD
       scope: RUN_TIME
       value: ${db.PASSWORD}
+    - key: SETUP
+      scope: RUN_TIME
+      value: true
     github:
       branch: main
       deploy_on_push: true
