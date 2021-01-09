@@ -99,7 +99,7 @@ And again Copy and Paste the Following line before of Closing Body tag ** 'body'
     <script src="./js/fundraiser.js"></script>
 
 #### Step 3:
-And The Final thing just the widget code to which section you want to display the Components.
+And The Final thing just paste the widget code to which section you want to display the Components.
 
      <div v-if="campaignshow" class="columns is-flex-wrap-wrap">
             <campaigncard v-for="(campaign,index) in campaignlist"
