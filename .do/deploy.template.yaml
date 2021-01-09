@@ -6,6 +6,8 @@ spec:
     http_port: 8080
     instance_count: 1
     instance_size_slug: basic-xs
+    routes:
+      - path: /
     environment_slug: php
     run_command: heroku-php-apache2 public/
     envs:
@@ -45,12 +47,10 @@ spec:
     - key: DB_PASSWORD
       scope: RUN_TIME
       value: ${db.PASSWORD}
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: israelysm/fundraiser
-  routes:
-    - path: /
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: israelysm/fundraiser
   jobs:
     - name: migrate
       kind: POST_DEPLOY
