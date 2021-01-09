@@ -2,7 +2,7 @@ spec:
   name: fundraiser
   region: ams
   services:
-  - name: Fundraiser
+  - name: fundraiser
     http_port: 8080
     instance_count: 1
     instance_size_slug: basic-xs
