@@ -36,6 +36,7 @@ Linux:
 
 #### Step 4:
 Update the database configuration in .env file. then check your env file is have SETUP=true or Just add **SETUP=true**
+and Check Your Env file Has **API_URL=http://localhost:8000/api** api url otherwise Don't Forget to Add.
 
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
