@@ -47,3 +47,15 @@ Route::middleware('auth')->get('members', 'App\Http\Controllers\MemberController
 Route::middleware('auth')->post('newcampaign', 'App\Http\Controllers\CampaignController@store');
 
 Route::middleware('auth')->get('campaign/{id}/delete', 'App\Http\Controllers\CampaignController@destroy');
+
+Route::get('getcampaign', 'App\Http\Controllers\CampaignController@getcampaign');
+
+Route::post('checkout', 'App\Http\Controllers\CheckoutController@store');
+
+Route::get('frontpage', function(){
+    return view('frontpage');
+});
+
+Route::get('pay', function(){
+    return view('payments.paypal');
+});

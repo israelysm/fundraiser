@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Transaction;
 use App\Models\Campaign;
+use DB;
 
-class CampaignController extends Controller
+class CheckoutController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,15 +16,7 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $apiUrl = env('API_URL');
-        $campaigns = Campaign::where('status',1)->get()->toArray();
-        return view('campaign.campaign', ['campaignlist'=>$campaigns,'apiUrl'=>$apiUrl]);
-    }
-
-    public function getcampaign()
-    {
-        $campaigns = Campaign::where('status',1)->get()->toArray();
-        return response($campaigns)->header('Content-Type', 'application/json');
+        //
     }
 
     /**
@@ -43,21 +37,27 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required',
-            'slug' => 'required|unique:campaigns',
-            'feature_image' => 'required',
-            'target_amount' => 'required',
-            'story' => 'required',
-        ]);
-        $requestData= $request->all();
-        $requestData['status'] = 1;
-        if(!empty($requestData['id'])){
-            $res =Campaign::where('id', $requestData['id'])->update($requestData);
-        } else {
-            $res = Campaign::Create($requestData);
-        }
-        
+        $requestData = $request->all();
+        $data['donor_name']=$requestData['name'];
+        $data['email']=$requestData['email'];
+        $data['mobile']=$requestData['mobile'];
+        $data['amount']=$requestData['amount'];
+        $data['campaign_id']=$requestData['campaignid'];
+        $data['receipt_number']= rand();
+
+        $res = Transaction::Create( $data);
+        $this->addAmount($data['amount'],$data['campaign_id']);
+        $data=['status'=>'success','receiptno'=>$data['receipt_number']];
+        return response()->json($data);
+    }
+
+    public function addAmount($amount,$id)
+    {
+        $res = DB::table('campaigns')
+        ->where('id', $id )
+        ->increment('amount', $amount);
+        //print_r($res);
+       return true;
     }
 
     /**
@@ -102,7 +102,6 @@ class CampaignController extends Controller
      */
     public function destroy($id)
     {
-        $res = Campaign::destroy($id);
-        return redirect()->back();
+        //
     }
 }

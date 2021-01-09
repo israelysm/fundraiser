@@ -20,6 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->string('email')->nullable();
             $table->string('tax_id')->nullable();
             $table->float('amount', 8, 2)->default(0);
+            $table->integer('campaign_id')->nullable();
             $table->string('receipt_number');
             $table->text('transaction_id')->nullable();
             $table->string('payment_type')->nullable();
