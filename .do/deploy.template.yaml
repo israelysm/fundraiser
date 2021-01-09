@@ -52,7 +52,7 @@ spec:
       value: ${db.PASSWORD}
     - key: SETUP
       scope: RUN_TIME
-      value: true
+      value: 'true'
     github:
       branch: main
       deploy_on_push: true
